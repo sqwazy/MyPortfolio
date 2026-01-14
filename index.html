@@ -375,10 +375,9 @@
         </div>
     </footer>
 
-    <script type="text/javascript">
-  const observer = new IntersectionObserver((entries) => {
+<script type="text/javascript">
+    const observer = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
-            console.log(entry)
             if (entry.isIntersecting) {
                 entry.target.classList.add('active');
             } else {
@@ -386,107 +385,76 @@
             }
         });
     }, {
-        // NEW PART: This tells the robot "Wait until 50% is visible"
-        threshold: 0.3 
+        threshold: 0.3
     });
 
     const hiddenElements = document.querySelectorAll('.reveal');
     hiddenElements.forEach((el) => observer.observe(el));
 
-    // 1. Select all sections and all navbar links
     let sections = document.querySelectorAll('section');
     let navLinks = document.querySelectorAll('.navbar ul li a');
 
-    // 2. Listen for the scroll event
     window.onscroll = () => {
-        
-        // Loop through every section on the page
         sections.forEach(sec => {
-            
-            // Get the position of the section
-            let top = window.scrollY; // How much we have scrolled down
-            let offset = sec.offsetTop - 150; // The top of the section (minus a little buffer)
-            let height = sec.offsetHeight; // The height of the section
-            let id = sec.getAttribute('id'); // The ID (e.g., "home", "about")
+            let top = window.scrollY;
+            let offset = sec.offsetTop - 150;
+            let height = sec.offsetHeight;
+            let id = sec.getAttribute('id');
 
-            // Check if we are currently "inside" this section
-            if(top >= offset && top < offset + height) {
-                
-                // If yes, loop through links and find the matching one
+            if (top >= offset && top < offset + height) {
                 navLinks.forEach(links => {
-                    // Remove 'active' from ALL links (turn off lights)
                     links.parentElement.classList.remove('active');
-                    
-                    // Add 'active' to the matching link (turn on THIS light)
                     document.querySelector('.navbar ul li a[href*=' + id + ']').parentElement.classList.add('active');
                 });
             }
         });
     };
 
-    /* 1. Tech Section Flip Logic */
-const cards = document.querySelectorAll('.tech-card'); // Make sure this class matches your HTML
-
-cards.forEach(card => {
-    card.addEventListener('click', () => {
-        // Toggle the 'clicked' class on/off
-        card.classList.toggle('clicked');
-    });
-});
-// EDUCATION SECTION CLICK LOGIC
-const eduCards = document.querySelectorAll('.timeline-content');
-
-eduCards.forEach(card => {
-    card.addEventListener('click', () => {
-        
-        // 1. Close all other cards first (Accordion Effect)
-        eduCards.forEach(otherCard => {
-            if (otherCard !== card) {
-                otherCard.classList.remove('active');
-            }
+    const cards = document.querySelectorAll('.tech-card');
+    cards.forEach(card => {
+        card.addEventListener('click', () => {
+            card.classList.toggle('clicked');
         });
-
-        // 2. Toggle the clicked card
-        card.classList.toggle('active');
     });
-});
-/* 3. "Click Outside" Logic (Closes cards when you click the background) */
-document.addEventListener('click', (e) => {
-    
-    // Check if the click was OUTSIDE the Education Cards
-    if (!e.target.closest('.timeline-content')) {
-        // Close all Education cards
-        eduCards.forEach(card => card.classList.remove('active'));
-    }
 
-    // Check if the click was OUTSIDE the Tech Cards
-    if (!e.target.closest('.tech-card')) { // Ensure '.tech-card' matches your class
-        // Close all Tech cards
-        cards.forEach(card => card.classList.remove('clicked'));
-    }
-});
-/* 4. About Grid Click Logic */
-const aboutCards = document.querySelectorAll('.about-grid div');
-
-aboutCards.forEach(card => {
-    card.addEventListener('click', () => {
-        // Optional: Close others if you want only one active at a time
-        aboutCards.forEach(c => c.classList.remove('active'));
-        
-        // Toggle this one
-        card.classList.toggle('active');
+    const eduCards = document.querySelectorAll('.timeline-content');
+    eduCards.forEach(card => {
+        card.addEventListener('click', () => {
+            eduCards.forEach(otherCard => {
+                if (otherCard !== card) {
+                    otherCard.classList.remove('active');
+                }
+            });
+            card.classList.toggle('active');
+        });
     });
-});
-/* Update your existing 'click outside' listener */
-document.addEventListener('click', (e) => {
-    
-    // ... your existing checks for Education and Tech ...
 
-    // NEW CHECK: Close About Cards
-    if (!e.target.closest('.about-grid div')) {
-        aboutCards.forEach(card => card.classList.remove('active'));
-    }
-});
+    const aboutCards = document.querySelectorAll('.about-grid div');
+    aboutCards.forEach(card => {
+        card.addEventListener('click', (e) => {
+            e.stopPropagation();
+            aboutCards.forEach(c => {
+                if (c !== card) {
+                    c.classList.remove('active');
+                }
+            });
+            card.classList.toggle('active');
+        });
+    });
+
+    document.addEventListener('click', (e) => {
+        if (!e.target.closest('.timeline-content')) {
+            eduCards.forEach(card => card.classList.remove('active'));
+        }
+
+        if (!e.target.closest('.tech-card')) {
+            cards.forEach(card => card.classList.remove('clicked'));
+        }
+
+        if (!e.target.closest('.about-grid div')) {
+            aboutCards.forEach(card => card.classList.remove('active'));
+        }
+    });
 </script>
 </body>
 
