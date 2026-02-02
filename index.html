@@ -6,6 +6,7 @@
     <title>MyPortfolio</title>
     <link rel="stylesheet" href="style.css">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <script src="email.min.js"></script>
 </head>
 
 <body>
@@ -301,7 +302,7 @@
     <section class="contact-page reveal" id="cont">
         <div class="contact-head">
             <h2>Contact <span>me</span></h2>
-            <form action="#" class="contact-grid">
+            <form action="#" class="contact-grid" id="contact-form">
                 <div>
                     <input type="text" name="name" placeholder="Full Name" class="input-field" required>
                 </div>
@@ -375,7 +376,7 @@
         </div>
     </footer>
 
-<script type="text/javascript">
+<script type="text/javascript"> //script1
     const observer = new IntersectionObserver((entries) => {
         entries.forEach((entry) => {
             if (entry.isIntersecting) {
@@ -387,24 +388,18 @@
     }, {
         threshold: 0.2
     });
-
     const hiddenElements = document.querySelectorAll('.reveal');
     hiddenElements.forEach((el) => observer.observe(el));
+// end of scriptt1
 
-    let sections = document.querySelectorAll('section');
-    let navLinks = document.querySelectorAll('.navbar ul li a');
-
- /* Lightweight Navbar Highlighter */
+// script 2
+     let sections = document.querySelectorAll('section');
+     let navLinks = document.querySelectorAll('.navbar ul li a');
 const navObserver = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
         if (entry.isIntersecting) {
-            // 1. Get the ID of the section currently on screen
             const id = entry.target.getAttribute('id');
-            
-            // 2. Remove 'active' from all links
             navLinks.forEach(link => link.parentElement.classList.remove('active'));
-            
-            // 3. Find the matching link and add 'active'
             const activeLink = document.querySelector(`.navbar ul li a[href*="${id}"]`);
             if (activeLink) {
                 activeLink.parentElement.classList.add('active');
@@ -412,31 +407,12 @@ const navObserver = new IntersectionObserver((entries) => {
         }
     });
 }, { 
-    threshold: 0.5 // Trigger when 50% of the section is visible
+    threshold: 0.5 
 });
-
-// Tell the observer to watch all sections
 sections.forEach(sec => navObserver.observe(sec));
+// end of script 2
 
-    const cards = document.querySelectorAll('.tech-card');
-    cards.forEach(card => {
-        card.addEventListener('click', () => {
-            card.classList.toggle('clicked');
-        });
-    });
-
-    const eduCards = document.querySelectorAll('.timeline-content');
-    eduCards.forEach(card => {
-        card.addEventListener('click', () => {
-            eduCards.forEach(otherCard => {
-                if (otherCard !== card) {
-                    otherCard.classList.remove('active');
-                }
-            });
-            card.classList.toggle('active');
-        });
-    });
-
+//script 3
     const aboutCards = document.querySelectorAll('.about-grid div');
     aboutCards.forEach(card => {
         card.addEventListener('click', (e) => {
@@ -449,7 +425,38 @@ sections.forEach(sec => navObserver.observe(sec));
             card.classList.toggle('active');
         });
     });
+//end of script 3
 
+//script 4
+    const cards = document.querySelectorAll('.tech-card');
+    cards.forEach(card => {
+        card.addEventListener('click', () => {
+            cards.forEach(otherCard => {
+                if(otherCard !== card) {
+                    otherCard.classList.remove('clicked');
+                }
+            });
+            card.classList.toggle('clicked');
+        });
+    });
+//end of script 4
+
+//script 5
+    const eduCards = document.querySelectorAll('.timeline-content');
+    eduCards.forEach(card => {
+        card.addEventListener('click', () => {
+            eduCards.forEach(otherCard => {
+                if (otherCard !== card) {
+                    otherCard.classList.remove('active');
+                }
+            });
+            card.classList.toggle('active');
+        });
+    });
+
+//end of script 5
+
+//script 6
     document.addEventListener('click', (e) => {
         if (!e.target.closest('.timeline-content')) {
             eduCards.forEach(card => card.classList.remove('active'));
@@ -463,6 +470,43 @@ sections.forEach(sec => navObserver.observe(sec));
             aboutCards.forEach(card => card.classList.remove('active'));
         }
     });
+    //end of script 6
+    
+    //contact-form script
+    const contactForm = document.querySelector('#contact-form');
+    const submitBtn =document.querySelector('.submit');
+    contactForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        submitBtn.value = 'Sending...';
+        submitBtn.disabled = true;
+        const formData = new FormData(e.target);
+        const templateParams = {
+         name: formData.get('name'),
+         email: formData.get('email'),
+         mobile: formData.get('mobile'),
+         subject: formData.get('subject'),
+         message: formData.get('message')
+        };
+        emailjs.send("service_r3h3nhe","template_asjob2r", templateParams)
+        .then(()=> {
+            e.target.reset();
+        })
+        .catch((error) => {
+            alert('Failed to send. Check the console for the error.');
+            console.log('EmailJS Error',error);
+        })
+        .finally(() => {
+            submitBtn.value = 'Send Message';
+            submitBtn.disabled =false;
+        });
+    });
+
+    (function() {
+        emailjs.init ({
+            publicKey: "mRW99nwb1zsehJbof",
+        });
+    })();
+
 </script>
 </body>
 

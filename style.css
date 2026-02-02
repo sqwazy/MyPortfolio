@@ -696,7 +696,7 @@ a {
     position: relative;
     opacity: 0;
     transition: 2s all ease;
-    scroll-margin-top: 130px;
+    scroll-margin-top: 120px;
 }
 .reveal.active {
     transform: translateY(0);
