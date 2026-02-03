@@ -13,7 +13,7 @@ const observer = new IntersectionObserver((entries) => {
     hiddenElements.forEach((el) => observer.observe(el));
 // end of scriptt1
 
-// script 2
+// script2
      let sections = document.querySelectorAll('section');
      let navLinks = document.querySelectorAll('.navbar ul li a');
 const navObserver = new IntersectionObserver((entries) => {
